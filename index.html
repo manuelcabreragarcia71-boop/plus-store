@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PLUS STORE | Urban Fashion</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Raleway:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #000;
+            --accent: #D4AF37; /* Dorado */
+            --white: #fff;
+            --light: #f8f8f8;
+            --text: #222;
+        }
+
+        /* Reset y Base para móvil */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; font-family: 'Raleway', sans-serif; background: var(--light); color: var(--text); overflow-x: hidden; }
+
+        /* HEADER & NAV (OPTIMIZADO MÓVIL) */
+        .navbar { background: var(--white); padding: 15px 0; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .nav-top { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .logo { font-family: 'Anton', sans-serif; font-size: 1.8rem; letter-spacing: 1px; color: var(--primary); margin: 0; text-transform: uppercase; }
+        .logo span { color: var(--accent); }
+        
+        /* Menú de Páginas Deslizable */
+        .nav-menu-container { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin-top: 10px; padding: 0 20px; }
+        .nav-menu-container::-webkit-scrollbar { display: none; }
+        .nav-menu { display: flex; gap: 15px; list-style: none; margin: 0; padding: 5px 0; white-space: nowrap; }
+        .nav-menu li button { background: none; border: none; font-family: 'Raleway'; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; transition: 0.3s; padding: 8px 12px; border-radius: 20px; color: #777; }
+        .nav-menu li button.active { color: var(--white); background: var(--primary); }
+        
+        .nav-icons { display: flex; gap: 20px; align-items: center; }
+        .icon-btn { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--primary); position: relative; padding: 5px; }
+        .admin-trigger { font-size: 1rem; color: #ddd; } /* Candado discreto */
+        #cart-count { position: absolute; top: 0; right: 0; background: var(--accent); color: white; font-size: 0.7rem; width: 18px; height: 18px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; }
+
+        /* HERO SECTION (NUEVA FOTO URBANA) */
+        .hero { 
+            /* Foto moderna de jóvenes urbanos */
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1529139574466-a3005241bb5a?auto=format&fit=crop&w=1600&q=80');
+            background-size: cover; background-position: center; color: var(--white); text-align: center; padding: 100px 20px; margin-bottom: 30px;
+        }
+        .hero h2 { font-family: 'Anton', sans-serif; font-size: 3.5rem; margin: 0; letter-spacing: 2px; text-transform: uppercase; }
+        .hero p { font-size: 1.2rem; font-weight: 600; letter-spacing: 1px; }
+        .btn-gold { background: var(--accent); color: white; padding: 15px 35px; text-transform: uppercase; border: none; cursor: pointer; letter-spacing: 2px; margin-top: 20px; text-decoration: none; display: inline-block; font-weight: 800; font-size: 0.9rem; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .hidden { display: none !important; }
+
+        /* FILTROS (MÓVIL FRIENDLY) */
+        .filters { background: white; padding: 20px; margin-bottom: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between; align-items: center; }
+        .filter-group { flex: 1 1 200px; }
+        .filter-group label { font-weight: 700; font-size: 0.9rem; display: block; margin-bottom: 5px; }
+        select, input[type="range"] { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 8px; font-family: inherit; font-weight: 600; background: white; height: 50px; }
+        input[type="range"] { padding: 0; }
+        
+        /* PRODUCTOS (GRID MÓVIL TIPO APP) */
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 15px; padding-bottom: 40px; }
+        .product-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.03); transition: 0.3s; position: relative; }
+        .product-card:active { transform: scale(0.98); } /* Efecto al pulsar en móvil */
+        .product-photo { width: 100%; height: 220px; object-fit: cover; }
+        .product-info { padding: 12px; text-align: left; }
+        .product-name { font-weight: 800; margin: 5px 0; font-family: 'Raleway'; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .product-cat { font-size: 0.75rem; color: #888; text-transform: uppercase; font-weight: 600; }
+        .price { color: var(--primary); font-size: 1.1rem; font-weight: 800; margin-top: 5px; display: block; }
+        
+        .btn-buy { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; font-weight: 800; text-transform: uppercase; cursor: pointer; font-size: 0.8rem; margin-top: 10px; border-radius: 5px; }
+        .fav-heart { position: absolute; top: 10px; right: 10px; font-size: 1.4rem; color: var(--primary); background: rgba(255,255,255,0.8); padding: 5px; border-radius: 50%; cursor: pointer; border: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .fav-heart.active { color: red; }
+
+        /* MEDIA QUERIES (AJUSTES ESPECÍFICOS PARA MÓVIL) */
+        @media (max-width: 768px) {
+            .hero { padding: 80px 20px; background-attachment: scroll; } /* Mejor rendimiento móvil */
+            .hero h2 { font-size: 2.8rem; }
+            .nav-top { padding: 10px 20px; }
+            .logo { font-size: 1.5rem; }
+            /* En móvil, el menú de páginas va debajo del logo */
+            .navbar { padding-bottom: 0; }
+            .nav-menu-container { border-top: 1px solid #f5f5f5; padding-top: 5px; }
+            /* Grid de productos más ajustado en móvil */
+            .grid-container { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .product-photo { height: 180px; }
+        }
+
+        /* OTRAS SECCIONES */
+        .review-form, .custom-order-section { background: white; padding: 30px 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); text-align: center; margin-top: 30px; }
+        .upload-box { border: 3px dashed var(--accent); padding: 30px; margin: 20px 0; cursor: pointer; background: #fffbf0; border-radius: 10px; }
+        .admin-panel { background: var(--white); border: 3px dashed var(--primary); padding: 20px; margin-top: 20px; border-radius: 10px; }
+        input, select, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: 2px solid #eee; font-family: inherit; font-weight: 600; }
+
+        /* MODALES */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; justify-content: center; align-items: end; }
+        .modal-content { background: var(--white); padding: 30px 20px; width: 100%; max-width: 500px; border-radius: 20px 20px 0 0; position: relative; max-height: 85vh; overflow-y: auto; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .close { position: absolute; top: 15px; right: 20px; font-size: 2rem; color: #999; }
+        
+        /* Pestañas Perfil */
+        .tab-buttons { display: flex; margin-bottom: 20px; background: #eee; padding: 5px; border-radius: 10px; }
+        .tab-btn { flex: 1; padding: 10px; cursor: pointer; background: none; border: none; font-weight: 800; color: #999; border-radius: 8px; transition: 0.3s; }
+        .tab-btn.active { color: var(--primary); background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        ul { list-style: none; padding: 0; } li { padding: 15px 0; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-top">
+            <h1 class="logo">PLUS<span>STORE</span></h1>
+            <div class="nav-icons">
+                <button onclick="abrirModal('cart-modal')" class="icon-btn"><i class="fas fa-shopping-bag"></i> <span id="cart-count">0</span></button>
+                <button onclick="gestionarUsuario()" class="icon-btn"><i class="fas fa-user"></i></button>
+                <button onclick="abrirModal('admin-login-modal')" class="icon-btn admin-trigger"><i class="fas fa-lock"></i></button>
+            </div>
+        </div>
+        <div class="nav-menu-container">
+            <ul class="nav-menu">
+                <li><button onclick="cambiarPagina('tienda')" class="active" id="btn-tienda">🔥 Colección</button></li>
+                <li><button onclick="cambiarPagina('resenas')" id="btn-resenas">⭐ Opiniones</button></li>
+                <li><button onclick="cambiarPagina('personalizado')" id="btn-personalizado">📸 Encargos</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="page-tienda">
+        <header class="hero">
+            <h2>URBAN STYLE 2025</h2>
+            <p>La calle es tu pasarela.</p>
+        </header>
+
+        <div class="container filters">
+            <div class="filter-group">
+                <label><i class="fas fa-filter"></i> Categoría</label>
+                <select id="filter-category" onchange="aplicarFiltros()">
+                    <option value="all">Todo</option>
+                    <option value="Ropa">Ropa</option>
+                    <option value="Zapatos">Zapatos</option>
+                    <option value="Relojes">Relojes</option>
+                    <option value="Accesorios">Accesorios</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label><i class="fas fa-tag"></i> Precio Máx: <span id="price-val">500</span>€</label>
+                <input type="range" id="filter-price" min="0" max="1000" value="500" step="10" oninput="actualizarPrecio(this.value)" onchange="aplicarFiltros()">
+            </div>
+        </div>
+
+        <div class="container grid-container" id="productos-container">
+            </div>
+    </div>
+
+    <div id="page-resenas" class="container hidden" style="margin-top: 30px;">
+        <div class="review-form">
+            <h2 style="font-family: 'Anton'">DEJA TU OPINIÓN</h2>
+            <form id="formResena">
+                <input type="text" id="reviewName" placeholder="Tu Nickname" required>
+                <select id="reviewStars" style="height: 50px;">
+                    <option value="5">⭐⭐⭐⭐⭐ Brutal</option>
+                    <option value="4">⭐⭐⭐⭐ Muy bueno</option>
+                    <option value="3">⭐⭐⭐ Normal</option>
+                </select>
+                <textarea id="reviewText" placeholder="¿Qué te ha parecido?" rows="3" required></textarea>
+                <button type="submit" class="btn-gold" style="width:100%">Publicar</button>
+            </form>
+        </div>
+        <div id="reviews-container" class="reviews-grid" style="margin-top:30px;"></div>
+    </div>
+
+    <div id="page-personalizado" class="container hidden" style="margin-top: 30px;">
+        <div class="custom-order-section">
+            <i class="fas fa-camera-retro" style="font-size: 4rem; color: var(--primary);"></i>
+            <h2 style="font-family: 'Anton'; margin-top: 20px;">¿LO QUIERES? LO TIENES.</h2>
+            <p>Si no está en el catálogo, mándanos una foto por WhatsApp.</p>
+            
+            <form id="customOrderForm" style="margin-top: 30px;">
+                <input type="text" id="customName" placeholder="Tu Nombre" required>
+                <textarea id="customDesc" placeholder="Describe lo que buscas (Talla, marca...)" rows="3"></textarea>
+                <div class="upload-box" onclick="alert('👉 Al pulsar ENVIAR WHATSAPP, se abrirá el chat. Por favor, ADJUNTA LA FOTO desde tu galería allí.')">
+                    <p>📸 TOCA AQUÍ PARA SABER CÓMO ENVIAR LA FOTO</p>
+                </div>
+                <button type="submit" class="btn-gold" style="width: 100%;">ENVIAR WHATSAPP <i class="fab fa-whatsapp"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <div id="admin-panel" class="container admin-panel hidden">
+        <h3>⚡ ADMIN ZONE</h3>
+        <form id="addProductForm">
+            <input type="file" id="newImg" accept="image/*" required>
+            <input type="text" id="newName" placeholder="Nombre Producto" required>
+            <select id="newCategory" required style="height: 50px;">
+                <option value="Ropa">Ropa</option>
+                <option value="Zapatos">Zapatos</option>
+                <option value="Relojes">Relojes</option>
+                <option value="Accesorios">Accesorios</option>
+            </select>
+            <input type="number" id="newPrice" placeholder="Precio (€)" required>
+            <button type="submit" class="btn-buy" style="background: var(--accent);">SUBIR PRODUCTO</button>
+        </form>
+        <button onclick="cerrarSesionAdmin()" style="margin-top:15px; padding:10px; width:100%; background:#333; color:white; border:none; border-radius:5px;">Cerrar Admin</button>
+    </div>
+
+    <div id="cart-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('cart-modal')">&times;</span>
+            <h2 style="font-family: 'Anton'">TU BOLSA</h2>
+            <ul id="cart-items"></ul>
+            <h3>TOTAL: <span id="total-price">0</span>€</h3>
+            <button onclick="realizarPedido()" class="btn-gold" style="width:100%">PEDIR POR WHATSAPP</button>
+        </div>
+    </div>
+
+    <div id="admin-login-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('admin-login-modal')">&times;</span>
+            <h3>STAFF ONLY</h3>
+            <input type="password" id="adminPass" placeholder="Código de seguridad">
+            <button onclick="verificarAdmin()" class="btn-buy">ENTRAR</button>
+        </div>
+    </div>
+
+    <div id="client-auth-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('client-auth-modal')">&times;</span>
+            <h2 style="font-family: 'Anton'">ÚNETE AL CLUB</h2>
+            <form id="clientAuthForm">
+                <input type="email" id="clientEmail" placeholder="Correo" required>
+                <input type="password" id="clientPass" placeholder="Contraseña" required>
+                <button type="submit" class="btn-gold" style="width:100%">ENTRAR / REGISTRO</button>
+            </form>
+            <p style="font-size:0.8rem; margin-top:15px; text-align: center;">Si no tienes cuenta, se crea sola al entrar.</p>
+        </div>
+    </div>
+
+    <div id="client-profile-modal" class="modal hidden">
+        <div class="modal-content" style="height: 90vh;">
+            <span class="close" onclick="cerrarModal('client-profile-modal')">&times;</span>
+            <h2 style="font-family: 'Anton'">MI ESPACIO</h2>
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="verTab('favs')">❤️ FAVORITOS</button>
+                <button class="tab-btn" onclick="verTab('history')">📦 PEDIDOS</button>
+            </div>
+            <div id="tab-favs" style="overflow-y: auto; max-height: 60vh;"><ul id="fav-list"></ul></div>
+            <div id="tab-history" class="hidden" style="overflow-y: auto; max-height: 60vh;"><ul id="history-list"></ul></div>
+            <button onclick="logoutClient()" style="margin-top:20px; width:100%; padding:15px; background:#eee; color:#333; border:none; border-radius:8px; font-weight:800;">CERRAR SESIÓN</button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <script>
+        // --- ⚠️ PEGA AQUÍ TUS CLAVES DE PLUS STORE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBFGONNSOyloukKKJeTYVRaEpFyzLSlRWw",
+            authDomain: "plus-store-web.firebaseapp.com",
+            projectId: "plus-store-web",
+            storageBucket: "plus-store-web.firebasestorage.app",
+            messagingSenderId: "918663622818",
+            appId: "1:918663622818:web:a33e78f71b2314698ae7fb",
+            measurementId: "G-PRVMPSW0Q1"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        let carrito = [];
+        let productosGlobal = [];
+        let usuarioActual = null;
+        let favoritos = [];
+        const MI_TELEFONO = "34607396568"; // ⚠️ PON TU NÚMERO
+
+        // AUTH
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                usuarioActual = user;
+                cargarFavoritos();
+                cerrarModal('client-auth-modal');
+            } else {
+                usuarioActual = null;
+                favoritos = [];
+                aplicarFiltros();
+            }
+        });
+
+        function gestionarUsuario() {
+            if (usuarioActual) {
+                abrirModal('client-profile-modal');
+                cargarPerfil();
+            } else {
+                abrirModal('client-auth-modal');
+            }
+        }
+
+        document.getElementById('clientAuthForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('clientEmail').value;
+            const pass = document.getElementById('clientPass').value;
+            auth.signInWithEmailAndPassword(email, pass)
+                .catch(error => {
+                    auth.createUserWithEmailAndPassword(email, pass)
+                        .then(() => db.collection('usuarios').doc(auth.currentUser.uid).set({ email: email }))
+                        .catch(e => alert(e.message));
+                });
+        });
+
+        function logoutClient() {
+            auth.signOut();
+            cerrarModal('client-profile-modal');
+        }
+
+        // NAV
+        function cambiarPagina(pag) {
+            document.querySelectorAll('[id^="page-"]').forEach(p => p.classList.add('hidden'));
+            document.querySelectorAll('.nav-menu button').forEach(b => b.classList.remove('active'));
+            document.getElementById(`page-${pag}`).classList.remove('hidden');
+            document.getElementById(`btn-${pag}`).classList.add('active');
+        }
+
+        // PRODUCTOS
+        function cargarProductos() {
+            db.collection("productos").orderBy("fecha", "desc").get().then(snap => {
+                productosGlobal = [];
+                snap.forEach(doc => {
+                    let data = doc.data();
+                    data.id = doc.id;
+                    productosGlobal.push(data);
+                });
+                aplicarFiltros();
+            });
+        }
+
+        function actualizarPrecio(val) { document.getElementById('price-val').innerText = val; }
+
+        function aplicarFiltros() {
+            const cat = document.getElementById('filter-category').value;
+            const maxPrice = Number(document.getElementById('filter-price').value);
+            const container = document.getElementById('productos-container');
+            container.innerHTML = "";
+
+            const filtrados = productosGlobal.filter(p => {
+                const pasaCategoria = cat === "all" || p.categoria === cat;
+                const pasaPrecio = p.precio <= maxPrice;
+                return pasaCategoria && pasaPrecio;
+            });
+
+            if(filtrados.length === 0) {
+                container.innerHTML = "<p style='width:100%; text-align:center; padding:20px;'>No hay productos con estos filtros.</p>";
+                return;
+            }
+
+            filtrados.forEach(p => {
+                const isFav = favoritos.includes(p.id) ? 'active' : '';
+                const div = document.createElement('div');
+                div.className = "product-card";
+                div.innerHTML = `
+                    <button class="fav-heart ${isFav}" onclick="toggleFavorito('${p.id}', '${p.nombre}')">♥</button>
+                    <img src="${p.img}" class="product-photo">
+                    <div class="product-info">
+                        <div class="product-name">${p.nombre}</div>
+                        <div class="product-cat">${p.categoria || 'Moda'}</div>
+                        <span class="price">${p.precio}€</span>
+                        <button class="btn-buy" onclick="addCart('${p.nombre}', ${p.precio})">AÑADIR</button>
+                        <button onclick="borrarProd('${p.id}')" class="hidden btn-admin-delete" style="color:red; border:1px solid red; padding:5px; width:100%; background:white; cursor:pointer; font-size:0.7rem; margin-top:5px; border-radius:5px;">ELIMINAR</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            
+            if(!document.getElementById('admin-panel').classList.contains('hidden')) {
+                document.querySelectorAll('.btn-admin-delete').forEach(b => b.classList.remove('hidden'));
+            }
+        }
+
+        // FAVORITOS
+        function cargarFavoritos() {
+            if(!usuarioActual) return;
+            db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').get()
+                .then(snap => {
+                    favoritos = [];
+                    snap.forEach(doc => favoritos.push(doc.id));
+                    aplicarFiltros();
+                });
+        }
+
+        function toggleFavorito(id, nombre) {
+            if(!usuarioActual) return abrirModal('client-auth-modal');
+            const index = favoritos.indexOf(id);
+            if(index === -1) {
+                db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').doc(id).set({ nombre: nombre });
+                favoritos.push(id);
+            } else {
+                db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').doc(id).delete();
+                favoritos.splice(index, 1);
+            }
+            aplicarFiltros();
+        }
+
+        function cargarPerfil() {
+            const listFav = document.getElementById('fav-list');
+            listFav.innerHTML = "Cargando...";
+            db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').get().then(snap => {
+                listFav.innerHTML = "";
+                if(snap.empty) listFav.innerHTML = "<li style='text-align:center; color:#999;'>No tienes favoritos.</li>";
+                snap.forEach(doc => {
+                    listFav.innerHTML += `<li>❤️ <b>${doc.data().nombre}</b></li>`;
+                });
+            });
+             const listHist = document.getElementById('history-list');
+             listHist.innerHTML = "Cargando...";
+             db.collection('usuarios').doc(usuarioActual.uid).collection('pedidos').orderBy('fecha', 'desc').get().then(snap => {
+                 listHist.innerHTML = "";
+                 if(snap.empty) listHist.innerHTML = "<li style='text-align:center; color:#999;'>No hay pedidos.</li>";
+                 snap.forEach(doc => {
+                     const data = doc.data();
+                     const fecha = new Date(data.fecha.seconds * 1000).toLocaleDateString();
+                     let itemsHtml = data.items.map(i => `${i.n}`).join(', ');
+                     listHist.innerHTML += `<li>📦 <b>${fecha}</b><br><small>${itemsHtml}</small></li>`;
+                 });
+             });
+        }
+
+        function verTab(tab) {
+            document.getElementById('tab-favs').classList.add('hidden');
+            document.getElementById('tab-history').classList.add('hidden');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.remove('hidden');
+            event.target.classList.add('active');
+        }
+
+        // CARRITO
+        function addCart(n, p) {
+            carrito.push({n, p});
+            document.getElementById('cart-count').innerText = carrito.length;
+            // Efecto visual
+            const btn = event.target; btn.innerText = "¡LISTO!"; btn.style.background = "var(--accent)";
+            setTimeout(() => { btn.innerText = "AÑADIR"; btn.style.background = "var(--primary)"; }, 1000);
+        }
+
+        function realizarPedido() {
+            if(carrito.length === 0) return alert("Bolsa vacía");
+            let msj = "👋 Hola PLUS STORE, pedido web: \n";
+            carrito.forEach(i => msj += `- ${i.n} (${i.p}€)\n`);
+            msj += `\n💰 TOTAL: ${document.getElementById('total-price').innerText}€`;
+            
+            if(usuarioActual) {
+                db.collection('usuarios').doc(usuarioActual.uid).collection('pedidos').add({
+                    items: carrito, fecha: new Date()
+                });
+            }
+            window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(msj)}`, '_blank');
+            carrito = [];
+            document.getElementById('cart-count').innerText = 0;
+            cerrarModal('cart-modal');
+        }
+
+        // RESEÑAS
+        function cargarResenas() {
+            db.collection("resenas").orderBy("fecha", "desc").limit(10).get().then(snap => {
+                const div = document.getElementById('reviews-container');
+                div.innerHTML = "";
+                if(snap.empty) div.innerHTML = "<p style='text-align:center; width:100%;'>Sé el primero en opinar.</p>";
+                snap.forEach(doc => {
+                    const r = doc.data();
+                    div.innerHTML += `<div style="background:white; padding:20px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.05); margin-bottom:15px;">
+                        <div style="color:var(--accent); letter-spacing:2px;">${"⭐".repeat(r.estrellas)}</div>
+                        <p style="font-weight:600; font-style:italic;">"${r.texto}"</p>
+                        <small style="color:#999; font-weight:800; text-transform:uppercase;">- ${r.nombre}</small>
+                    </div>`;
+                });
+            });
+        }
+
+        document.getElementById('formResena').addEventListener('submit', function(e) {
+            e.preventDefault();
+            db.collection("resenas").add({
+                nombre: document.getElementById('reviewName').value,
+                estrellas: document.getElementById('reviewStars').value,
+                texto: document.getElementById('reviewText').value,
+                fecha: new Date()
+            }).then(() => {
+                document.getElementById('formResena').reset();
+                cargarResenas();
+            });
+        });
+
+        // CUSTOM ORDER
+        document.getElementById('customOrderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('customName').value;
+            const desc = document.getElementById('customDesc').value;
+            const msj = `📸 *ENCARGO PERSONALIZADO*\nSoy ${name}.\nBusco: "${desc}"\n(Adjunto foto a continuación)`;
+            window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(msj)}`, '_blank');
+        });
+
+        // ADMIN
+        function verificarAdmin() {
+            if(document.getElementById('adminPass').value === "4354") {
+                document.getElementById('admin-panel').classList.remove('hidden');
+                cerrarModal('admin-login-modal');
+                aplicarFiltros();
+            } else { alert("Error"); }
+        }
+        function cerrarSesionAdmin() {
+            document.getElementById('admin-panel').classList.add('hidden');
+            aplicarFiltros();
+        }
+
+        document.getElementById('addProductForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const file = document.getElementById('newImg').files[0];
+            if(file.size > 1000000) return alert("Imagen muy grande (Max 1MB)");
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function() {
+                db.collection("productos").add({
+                    nombre: document.getElementById('newName').value, 
+                    categoria: document.getElementById('newCategory').value, 
+                    precio: Number(document.getElementById('newPrice').value), 
+                    img: reader.result, 
+                    fecha: new Date().toISOString()
+                }).then(() => {
+                    alert("Subido"); document.getElementById('addProductForm').reset(); cargarProductos();
+                });
+            };
+        });
+
+        function borrarProd(id) {
+            if(confirm("¿Eliminar?")) db.collection("productos").doc(id).delete().then(() => cargarProductos());
+        }
+
+        // MODALES
+        window.abrirModal = (id) => {
+            document.getElementById(id).classList.remove('hidden');
+            if(id === 'cart-modal') {
+                const ul = document.getElementById('cart-items');
+                ul.innerHTML = ""; let total = 0;
+                carrito.forEach(i => { ul.innerHTML += `<li><b>${i.n}</b> - ${i.p}€</li>`; total += i.p; });
+                document.getElementById('total-price').innerText = total;
+            }
+        }
+        window.cerrarModal = (id) => document.getElementById(id).classList.add('hidden');
+
+        // INICIAR
+        cargarProductos();
+        cargarResenas();
+    </script>
+</body>
+</html>
